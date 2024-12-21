@@ -1,0 +1,75 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id          String   @id @default(uuid())
+  firstName   String
+  lastName    String
+  dateOfBirth DateTime
+  phoneNumber String   @unique
+  gender      Gender
+  email       String   @unique
+  address     String
+  password    String
+  role        Role
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  doctor      Doctor?
+  patient     Patient?
+}
+
+model Profile {
+  id         Int     @id @default(autoincrement())
+  userId     Int     @unique
+  profilePic String?
+}
+
+model Patient {
+  id                     String  @id @default(uuid())
+  userId                 String  @unique
+  emergencyContactNumber String
+  emergencyContactName   String
+  allergies              String?
+  currentMedications     String?
+  user                   User    @relation(fields: [userId], references: [id])
+}
+
+model Doctor {
+  id                         String         @id @default(uuid())
+  userId                     String         @unique
+  specialization             Specialization
+  medicalLicenseNumber       String
+  yearsOfExperience          Int
+  qualifications             String
+  governmentIssuedIdDocument String
+  isApproved                 Boolean        @default(false)
+  approvedAt                 DateTime?
+  user                       User           @relation(fields: [userId], references: [id])
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+enum Role {
+  PATIENT
+  DOCTOR
+  ADMIN
+}
+
+enum Specialization {
+  CARDIOLOGY
+  DERMATOLOGY
+  NEUROLOGY
+  PEDIATRICS
+  SURGERY
+}
