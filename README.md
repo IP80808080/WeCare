@@ -28,7 +28,7 @@ yarn install
 
 1. Create two environment files in the root directory:
 
-## only use port 5432 its gives problem with port starting with 6...
+#### only use port 5432 (port starting with 6... gives problem)
 
 `.env` - For database configuration:
 ```plaintext
